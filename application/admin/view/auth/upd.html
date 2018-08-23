@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('admin_static')}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{:config('admin_static')}/js/jquery.js"></script>
+    <style>
+        .active{
+            border-bottom: solid 3px #66c9f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">表单</a></li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span class="active">基本信息</span>
+        </div>
+        <form action="" method="post">
+            <!-- 隐藏域 -->
+            <input type="hidden" name="auth_id"  value="{$auth['auth_id']}"/>
+            <ul class="forminfo">
+                <li>
+                    <label>权限名称</label>
+                    <input name="auth_name" value="{$auth['auth_name']}" placeholder="请输入权限名称" type="text" class="dfinput" /><i></i>
+                </li>
+                <li>
+                    <label>父级权限</label>
+                    <select name='pid' class="dfinput">
+                        <option value='0'>顶级权限</option>
+                        {foreach name='auths' item='auth_v'}
+                             <option value="{$auth_v['auth_id']}">{:str_repeat('&nbsp;',$auth_v['level']*3)}{$auth_v['auth_name']}</option>
+                        {/foreach}
+                    </select>
+                </li>
+                <li>
+                    <label>控制器名{$auth['auth_c']}</label>
+                    <input name="auth_c" value="{$auth['auth_c']}" placeholder="顶级权限不填" type="text" class="dfinput" /><i></i>
+                </li>
+                <li>
+                    <label>方法名</label>
+                    <input name="auth_a" value="{$auth['auth_a']}" placeholder="顶级权限不填" type="text" class="dfinput" /><i></i>
+                </li>
+            </ul>
+			<li>
+                    <label>&nbsp;</label>
+                    <input name="" id="btnSubmit" type="submit" class="btn" value="确认保存" />
+             </li>
+        </form>
+    </div>
+</body>
+<script>
+    //权限父权限默认选中
+   // alert("{$auth['pid']}");
+    $("select[name='pid']").val("{$auth['pid']}");
+    //给name=pid的select元素绑定change事件
+    $("select[name='pid']").on('change',function(){
+        var pid = $(this).val();
+        //如果是顶级权限（auth_id=0）
+        if(pid == 0 ){
+            //让两个input不可用
+            $("input[name='auth_c'],input[name='auth_a']").prop('disabled',true).val(''); 
+        }else{
+            $("input[name='auth_c'],input[name='auth_a']").prop('disabled',false); 
+        }
+    });
+    $("select[name='pid']").change();
+    
+</script>
+
+</html>
